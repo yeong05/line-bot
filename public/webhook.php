@@ -23,7 +23,19 @@ foreach ($jsonObj->events as $event) {
             'userId' => $userId
         ], JSON_UNESCAPED_UNICODE));
         reply($replyToken, "提醒已設定！");
+    }elseif (strpos($msg, '查詢提醒') !== false) {
+    if (file_exists('reminder.json')) {
+        $reminder = json_decode(file_get_contents('reminder.json'), true);
+        if (isset($reminder['time'], $reminder['text'])) {
+            reply($replyToken, "📋 提醒清單：\n時間：{$reminder['time']}\n內容：{$reminder['text']}");
+        } else {
+            reply($replyToken, "目前沒有設定提醒 💤");
+        }
+    } else {
+        reply($replyToken, "目前沒有設定提醒 💤");
     }
+}
+
 }
 
 function reply($replyToken, $text) {
