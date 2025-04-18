@@ -14,32 +14,41 @@ foreach ($jsonObj->events as $event) {
     $msg = $event->message->text ?? '';
     $userId = $event->source->userId ?? '';
 
-if (strpos($msg, '蓁蓁咪') !== false) {
-    reply($replyToken, "你喊我嗎～💕");
+    if (strpos($msg, '蓁蓁咪') !== false) {
+        reply($replyToken, "你喊我嗎～💕");
 
-} elseif (strpos($msg, '查詢提醒') !== false) {
-    if (file_exists('reminder.json')) {
-        $reminder = json_decode(file_get_contents('reminder.json'), true);
-        if (isset($reminder['time'], $reminder['text'])) {
-            reply($replyToken, "📋 提醒清單：\n時間：{$reminder['time']}\n內容：{$reminder['text']}");
+    } elseif (strpos($msg, '查詢提醒') !== false) {
+        if (file_exists('reminders.json')) {
+            $reminders = json_decode(file_get_contents('reminders.json'), true);
+            if (!empty($reminders)) {
+                $reply = "📋 提醒清單：\n";
+                foreach ($reminders as $i => $rem) {
+                    $num = $i + 1;
+                    $reply .= "{$num}️⃣ {$rem['time']} - {$rem['text']}\n";
+                }
+                reply($replyToken, trim($reply));
+            } else {
+                reply($replyToken, "目前沒有設定提醒 💤");
+            }
         } else {
             reply($replyToken, "目前沒有設定提醒 💤");
         }
-    } else {
-        reply($replyToken, "目前沒有設定提醒 💤");
+
+    } elseif (strpos($msg, '提醒') !== false) {
+        // 新增提醒項目
+        $new = [
+            'time' => date("Y-m-d H:i", strtotime("+1 minutes")), // 測試用：+1分鐘
+            'text' => $msg,
+            'userId' => $userId
+        ];
+        $reminders = [];
+        if (file_exists('reminders.json')) {
+            $reminders = json_decode(file_get_contents('reminders.json'), true);
+        }
+        $reminders[] = $new;
+        file_put_contents('reminders.json', json_encode($reminders, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        reply($replyToken, "✅ 提醒已設定！");
     }
-
-} elseif (strpos($msg, '提醒') !== false) {
-    file_put_contents('reminder.json', json_encode([
-        'time' => date("Y-m-d H:i", strtotime("+1 minutes")),
-        'text' => $msg,
-        'userId' => $userId
-    ], JSON_UNESCAPED_UNICODE));
-    reply($replyToken, "提醒已設定！");
-}
-
-}
-
 }
 
 function reply($replyToken, $text) {
@@ -54,6 +63,7 @@ function reply($replyToken, $text) {
         'replyToken' => $replyToken,
         'messages' => [['type' => 'text', 'text' => $text]]
     ];
+
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -62,5 +72,4 @@ function reply($replyToken, $text) {
     curl_exec($ch);
     curl_close($ch);
 }
-
 ?>
