@@ -1,4 +1,6 @@
 <?php
+file_put_contents('log.txt', "[" . date("Y-m-d H:i:s") . "] Webhook triggered\n", FILE_APPEND);
+
 $accessToken = '4XkgoI/CBhUW4x05oKNsOsnc0TehxUmv4X86TZXxgfk/6ZTSMvzQ3rbdejj4UN/1EDfCk5oTuhWsfL5EmIkwhv LThVrQBCtIzO1vUWKuMRlAxsv2aM9+iqcL1O6RPZgrQ9uYQATqPXFxpz/9sc26igdB04t89/1O/w1cDnyilFU=';
 
 $jsonStr = file_get_contents('php://input');
