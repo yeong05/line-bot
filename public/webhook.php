@@ -28,7 +28,7 @@ foreach ($jsonObj->events as $event) {
 
 function reply($replyToken, $text) {
     $url = 'https://api.line.me/v2/bot/message/reply';
-    $accessToken = 'YOUR_CHANNEL_ACCESS_TOKEN';
+    $accessToken = '4XkgoI/CBhUW4x05oKNsOsnc0TehxUmv4X86TZXxgfk/6ZTSMvzQ3rbdejj4UN/1EDfCk5oTuhWsfL5EmIkwhv LThVrQBCtIzO1vUWKuMRlAxsv2aM9+iqcL1O6RPZgrQ9uYQATqPXFxpz/9sc26igdB04t89/1O/w1cDnyilFU=';
     $headers = [
         "Content-Type: application/json",
         "Authorization: Bearer $accessToken"
