@@ -14,16 +14,9 @@ foreach ($jsonObj->events as $event) {
     $msg = $event->message->text ?? '';
     $userId = $event->source->userId ?? '';
 
-    if (strpos($msg, '蓁蓁咪') !== false) {
-        reply($replyToken, "你喊我嗎～💕");
-    } elseif (strpos($msg, '提醒') !== false) {
-        file_put_contents('reminder.json', json_encode([
-            'time' => date("Y-m-d H:i", strtotime("+1 minutes")),
-            'text' => $msg,
-            'userId' => $userId
-        ], JSON_UNESCAPED_UNICODE));
-        reply($replyToken, "提醒已設定！");
-    }elseif (strpos($msg, '查詢提醒') !== false) {
+ if (strpos($msg, '蓁蓁咪') !== false) {
+    reply($replyToken, "你喊我嗎～💕");
+} elseif (strpos($msg, '查詢提醒') !== false) {
     if (file_exists('reminder.json')) {
         $reminder = json_decode(file_get_contents('reminder.json'), true);
         if (isset($reminder['time'], $reminder['text'])) {
@@ -34,6 +27,15 @@ foreach ($jsonObj->events as $event) {
     } else {
         reply($replyToken, "目前沒有設定提醒 💤");
     }
+} elseif (strpos($msg, '提醒') !== false) {
+    file_put_contents('reminder.json', json_encode([
+        'time' => date("Y-m-d H:i", strtotime("+1 minutes")),
+        'text' => $msg,
+        'userId' => $userId
+    ], JSON_UNESCAPED_UNICODE));
+    reply($replyToken, "提醒已設定！");
+}
+
 }
 
 }
