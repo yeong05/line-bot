@@ -27,8 +27,9 @@ foreach ($jsonObj->events as $event) {
 }
 
 function reply($replyToken, $text) {
+    global $accessToken;
+
     $url = 'https://api.line.me/v2/bot/message/reply';
-    $accessToken = '4XkgoI/CBhUW4x05oKNsOsnc0TehxUmv4X86TZXxgfk/6ZTSMvzQ3rbdejj4UN/1EDfCk5oTuhWsfL5EmIkwhv LThVrQBCtIzO1vUWKuMRlAxsv2aM9+iqcL1O6RPZgrQ9uYQATqPXFxpz/9sc26igdB04t89/1O/w1cDnyilFU=';
     $headers = [
         "Content-Type: application/json",
         "Authorization: Bearer $accessToken"
@@ -45,4 +46,5 @@ function reply($replyToken, $text) {
     curl_exec($ch);
     curl_close($ch);
 }
+
 ?>
